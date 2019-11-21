@@ -1,7 +1,9 @@
-# Abdullah Arif 
 # COMP-4670 password cracking final project
 import itertools
 from RuleApplyer import *
+from urllib.request import urlopen, hashlib
+import hashlib
+#   import bcrypt
 
 def getFileInfo(filePath : str):
     file = open(filePath,"r+", encoding="utf-8")
@@ -12,10 +14,26 @@ def makeOutputFile(filePath : str):
     return file
 
 class passwordCracker:
+    #static variable for the different types of hashes
+    NOHASH = 0
+    SHA1 = 1
+    MD5 = 2
     def __init__(self, inputPasswordFile : str, oFile : str):
         # I would try and catch error here but I want the program to crash if the input, output file are not set incorrectly
         self.passwordList = getFileInfo(inputPasswordFile)
         self.outputFile = makeOutputFile(oFile)
+        self.hashNumber = 0
+    # set the program to check for the given hashes
+    def setHashNum(self, num : int):
+        self.hashNumber = num
+
+    def getWord(self, word : str):
+        if(self.hashNumber == passwordCracker.NOHASH):
+            return word
+        if(self.hashNumber == passwordCracker.SHA1):
+            return hashlib.sha1(bytes(guess, 'utf-8')).hexdigest()
+        if(self.hashNumber == passwordCracker.MD5):
+            return hashlib.sha1(bytes(guess, 'utf-8')).hexdigest()
 
     def bruteForce(self, keyspace, max_length = 1 , rule = False, ruleList = None):
         # ** change keySpace to point to file which program will get
@@ -35,13 +53,14 @@ class passwordCracker:
                 # do rule stuff
             else:
                 for attempt in lengthAttempt:
-                    possiblePassword = ''.join(attempt)
+                    plainTextPassword = ''.join(attempt)
+                    possiblePassword = self.getWord(plainTextPassword)
                     # print("Trying "+ possiblePassword)
                     for password in self.passwordList:
                         if possiblePassword == password:
-                            print("Cracked: " + password)
+                            print("Cracked: " + plainTextPassword)
                             numCracked += 1
-                            self.outputFile.write(possiblePassword+"\n")
+                            self.outputFile.write(plainTextPassword+"\n")
                             self.passwordList.remove(possiblePassword)
                         if 0 == len(self.passwordList):
                             print("All passwords cracked!")
@@ -82,12 +101,14 @@ class passwordCracker:
         for i in range(len(maskList)):
             s += "for " + variableList[i%len(variableList)]*((i//len(variableList)+1)) + " in maskList["+str(i)+"]:\n\t"
             s += "\t"*i
-        s += "possiblePassword = "
+        s += "plainTextPassword = "
         for i in range(len(maskList)):
             s += variableList[i%len(variableList)]*((i//len(variableList)+1))
             if(i != len(maskList)-1):
                 s += " + "
         s += "\n"
+        s += "\t"*(len(maskList))  
+        s += "possiblePassword = self.getWord(plainTextPassword)\n"
         s += "\t"*(len(maskList))  
         s += "for password in self.passwordList:\n\t"
         s += "\t"*len(maskList)
@@ -97,7 +118,7 @@ class passwordCracker:
         s += "\t"*(len(maskList)+1)
         s +=  "numCracked += 1\n\t"
         s += "\t"*(len(maskList)+1)
-        s +=  "self.outputFile.write(possiblePassword+'\\n')\n\t"
+        s +=  "self.outputFile.write(plainTextPassword+'\\n')\n\t"
         s += "\t"*(len(maskList)+1)
         s +=  "self.passwordList.remove(possiblePassword)\n\t"
         s += "\t"*len(maskList)
@@ -109,53 +130,93 @@ class passwordCracker:
         # print(s)
         exec(s)
     # function applies rules to list of word and test against password
+    # Note: starting position is inclusive and ending position is exclusive for all ranges
     def ruleEnhancer(self, ruleString : str, wordList : list) -> list: 
-        # consume string depending on input 
-        curString = ""
-        ruleCounter = 0 #place in the char array
+        ruleCounter = 0 #place in the hypothetical rule array represented by the ruleString
         ruleList = {
             ":": nothingString, # do nothing
-            "l": lowerString, # lowercase   #
+            "l": lowerString, # lowercase   
             "u": upperString, # upper case
             "c": capitalizeString,
             "C": invertCapitalize,
             "t": toggleString,
-            "T": toggleStringAtPos
+            "T": toggleStringAtPos,
+            "r": reverseString,
+            "d": duplicateString,
+            "p": duplicateStringNtimes,
+            "f": reflectString,
+            "{": rotateLeftString,
+            "}": rotateRightString,
+            "$": appendCharacter,
+            "^": prependCharacter,
+            "[": truncateLeft,
+            "]": truncateRight,
+            "D": deleteAtPos, 
+            "x": extractSubstring, #extract substring from main string
+            "O": omitSubstring,
+            "i": insertCharacterAtPos, 
+            "o": overwriteCharacterAtPos, 
+            "'": truncateFromPos,  
+            "s": replaceCharacter, 
+            "@": purgeString,
+            "z": duplicateFirst,
+            "Z": duplicateLast,
+            "q": duplicateAll,
+            "M": MemoryRules.setMemory,
+            "X": MemoryRules.extractMemory,
+            "4": MemoryRules.appendMemory,
+            "6": MemoryRules.prependMemory
         }
-        # handle rules that "eat more of the string"
+        # handle rules that have arguments
         ruleCountList = {
-            "T": 2
+            "T": 2, # toggle at given position
+            "p": 2, # duplicate n number of time
+            "$": 2, # append the given character
+            "^": 2, # prepend the given character
+            "D": 2, # Delete at given position
+            "x": 3, # get character in the given range if out of range get whole word
+            "O": 3, # get rid of character is given range
+            "i": 3, # iNX insert char X at position n
+            "o": 3, # oNX overwrite character at position i with char X
+            "'": 2, # truncate word after given index 
+            "s": 3, # sXY - replace all instances of X with Y
+            "@": 2, # second argument is character to purge
+            "z": 2, # second argument is how many times first character will be duplicated
+            "Z": 2, # second argument is how many times last character will be duplicated
+            "X": 4,  # Insert substring of length M starting from position N of word saved to memory at position I
         }
         numCracked = 0 
         while ruleCounter < len(ruleString):
             rule = ruleString[ruleCounter] 
             ruleCounter += ruleCountList.get(rule, 1)
+            nextWordList=[]
             for word in wordList:
                 # what if someone's password is "invalid rule "and it gets cracked by an error O.O
-                # func = ruleList.get(rule, lambda: print('Invalid'))
-                # possiblePassword = func(''.join(word))
-
                 func = ruleList.get(rule, lambda: print('Invalid'))                
                 s = "func(''.join(word)"
                 for i in range (ruleCounter - ruleCountList.get(rule, 1) + 1, ruleCounter):
-                    s += ", " + str(ruleString[i])
+                    s += ",'" + str(ruleString[i]) + "'"
                 s += ")"
                 # print(s)
-                possiblePassword = eval(s)
-
+                plainTextPassword = eval(s)
+                possiblePassword = self.getWord(plainTextPassword)
                 # print(possiblePassword)
-                # Test all possible passwords
+                if(ruleCounter<len(ruleString)): # if we need to know password to chain 
+                    # ** for large rules it might be better to write to file and read back from it  
+                    nextWordList.append(plainTextPassword)
+                # Test all possible passwords against all passwords to crack
                 for password in self.passwordList:
                     if possiblePassword == password:
-                        print("Cracked: " + password)
+                        print("Cracked: " + plainTextPassword)
                         numCracked += 1
-                        self.outputFile.write(possiblePassword+"\n")
+                        self.outputFile.write(plainTextPassword+"\n")
                         self.passwordList.remove(possiblePassword)
                     if 0 == len(self.passwordList):
                         print("All passwords cracked!")
                         return
+                wordList = nextWordList 
+    def combinationAttack(self):
+        pass
+        # Will fill this up. So, I can carry out combination attack
+        # 
             
-                
-
-# 
-#

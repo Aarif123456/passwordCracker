@@ -44,7 +44,7 @@ def passwordCrackingMenu():
 # 4. Rule-based with dictionary
 # 5. Combination'''))
 		
-	mode = 3
+	mode = 1
 	if(mode == 1):
 		#  get key space from file or one of the pre selected
 		cracker.bruteForce("abcdefghijklmnopqrstuvwxyz", 5)
@@ -53,9 +53,14 @@ def passwordCrackingMenu():
 	if(mode == 3):
 		# get rule File using Tkinter
 		with open("Input/rule.txt","r+", encoding="utf-8") as ruleFile:
-			cracker.bruteForce(list("abcdefghijklmnopqrstuvwxyz"), 12, True,ruleFile.read().splitlines())
+			cracker.bruteForce(['p@ssW0rd'], 1, True,ruleFile.read().splitlines())
+	if(mode == 4 ):
+		# hybrid attack
+		pass
 
 	print("check output file for list of cracked password")
 	# filename = filedialog.askopenfile(mode="r",title="Load",filetypes = fileFormats)
 
+def hashCrackingMenu():
+	pass
 menu()
