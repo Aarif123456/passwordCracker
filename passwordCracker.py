@@ -22,26 +22,34 @@ class passwordCracker:
         # I would try and catch error here but I want the program to crash if the input, output file are not set incorrectly
         self.passwordList = getFileInfo(inputPasswordFile)
         self.outputFile = makeOutputFile(oFile)
-        self.hashNumber = 0
+        self.hashNumber = 0 #default is to use plain-text
+        self.verbose = False #default is singular attacks so we don't need to verbose the attempts
+
     # set the program to check for the given hashes
     def setHashNum(self, num : int):
         self.hashNumber = num
 
+    def setVerboseMode(self, verboseMode: bool):
+        self.verbose = verboseMode
+
     def getWord(self, word : str):
+        if(self.verbose):
+            print(word+"\n")
         if(self.hashNumber == passwordCracker.NOHASH):
             return word
         if(self.hashNumber == passwordCracker.SHA1):
             return hashlib.sha1(bytes(guess, 'utf-8')).hexdigest()
         if(self.hashNumber == passwordCracker.MD5):
-            return hashlib.sha1(bytes(guess, 'utf-8')).hexdigest()
+            return hashlib.md5(bytes(guess, 'utf-8')).hexdigest()
 
-    def bruteForce(self, keyspace, max_length = 1 , rule = False, ruleList = None):
-        # ** change keySpace to point to file which program will get
+    def bruteForce(self, keyspace,  min_length = 0, max_length = 1 , rule = False, ruleList = None, appendMask = False, prependMask = False):
         numCracked = 0
+        min_length = min(0,min_length) #min_length can't be less than 0
         print("running brute Force")
         for i in range( max_length ):
             # attempt for a given length
             lengthAttempt = itertools.product(keyspace,repeat=i+1)
+            # apply rules
             if(rule):
                 if(ruleList == None):
                     print("No rule file is set")
@@ -49,13 +57,10 @@ class passwordCracker:
                     for ruleString in ruleList:
                         self.ruleEnhancer(ruleString, lengthAttempt)
                         lengthAttempt = itertools.product(keyspace,repeat=i+1)
-                
-                # do rule stuff
             else:
                 for attempt in lengthAttempt:
                     plainTextPassword = ''.join(attempt)
                     possiblePassword = self.getWord(plainTextPassword)
-                    # print("Trying "+ possiblePassword)
                     for password in self.passwordList:
                         if possiblePassword == password:
                             print("Cracked: " + plainTextPassword)
@@ -65,14 +70,14 @@ class passwordCracker:
                         if 0 == len(self.passwordList):
                             print("All passwords cracked!")
                             return
-    def maskAttack(self, mask: str,*customFileName ):     
+    def maskAttack(self, mask: str, prefix = "", suffix = "",*customFileName ):     
         # ?b = 0x00 - 0xff -> not implemented
         print("running mask attack")
         numCracked = 0
         maskList =[]
         for i in range(0,len(mask),2):
             # print(mask[i:i+2])
-            if(mask[i:i+2] == "?l"):  # lowercase= abcdefghijklmnopqrstuvwxyz
+            if(mask[i:i+2] == "?l"):  # lowercase= abcdefghijklmnopqrstuvwxyz 
                 maskList.append(getFileInfo("Resources/lowerCaseLetter.txt"))
             elif(mask[i:i+2] == "?u"): # uppercase = ABCDEFGHIJKLMNOPQRSTUVWXYZ
                 maskList.append(getFileInfo("Resources/upperCaseLetter.txt"))
@@ -108,12 +113,10 @@ class passwordCracker:
                 s += " + "
         s += "\n"
         s += "\t"*(len(maskList))  
-        s += "possiblePassword = self.getWord(plainTextPassword)\n"
+        s += "possiblePassword = prefix + self.getWord(plainTextPassword) + suffix\n"
         s += "\t"*(len(maskList))  
         s += "for password in self.passwordList:\n\t"
         s += "\t"*len(maskList)
-        # s += "print(password)\n\t"
-        # s += "\t"*len(maskList)
         s += "if possiblePassword == password:\n\t"
         s += "\t"*(len(maskList)+1)
         s +=  "numCracked += 1\n\t"
@@ -127,8 +130,9 @@ class passwordCracker:
         s += 'print("All passwords cracked!")\n\t'
         s += "\t"*(len(maskList)+1)
         s += "exit()\n\t"
-        # print(s)
+        # print(s) # for testing print out python code to execute 
         exec(s)
+    
     # function applies rules to list of word and test against password
     # Note: starting position is inclusive and ending position is exclusive for all ranges
     def ruleEnhancer(self, ruleString : str, wordList : list) -> list: 
@@ -200,7 +204,6 @@ class passwordCracker:
                 # print(s)
                 plainTextPassword = eval(s)
                 possiblePassword = self.getWord(plainTextPassword)
-                # print(possiblePassword)
                 if(ruleCounter<len(ruleString)): # if we need to know password to chain 
                     # ** for large rules it might be better to write to file and read back from it  
                     nextWordList.append(plainTextPassword)
@@ -215,8 +218,8 @@ class passwordCracker:
                         print("All passwords cracked!")
                         return
                 wordList = nextWordList 
+
     def combinationAttack(self):
         pass
-        # Will fill this up. So, I can carry out combination attack
-        # 
+
             
