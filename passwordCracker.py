@@ -61,6 +61,7 @@ class passwordCracker:
                 for attempt in lengthAttempt:
                     plainTextPassword = ''.join(attempt)
                     possiblePassword = self.getWord(plainTextPassword)
+                    
                     for password in self.passwordList:
                         if possiblePassword == password:
                             print("Cracked: " + plainTextPassword)

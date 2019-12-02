@@ -13,9 +13,11 @@ from PyQt5.QtCore import *
 # # window.setCentralWidget(button)
 # window.show()
 # sys.exit(app.exec_())
-menuCSS = '''
-QPushButton#StyledButton[Test=true] {...}
-'''
+menuCSS = """"
+
+"""
+
+
 # # open up and 
 class Menu(QWidget):
     BRUTE_FORCE = 0
@@ -46,8 +48,9 @@ class Menu(QWidget):
             print("ERROR: could not open file")
 
     def openMenu(self):
+        self.setStyleSheet(menuCSS)
         # set up window
-        self.setGeometry(300, 300, 300, 200)
+        self.setGeometry(300, 200, 300, 600)
         self.setWindowTitle('Password Cracker')    
 
         # set up the main window in grid form
@@ -84,7 +87,7 @@ class Menu(QWidget):
         btn.setToolTip('Open up the input file that the program will use to crack the passwords')
         btn.clicked.connect(lambda:self.file_open("Input"))
         btn.resize(btn.sizeHint())
-        btn.move(50, 50)               
+        layout.addWidget(btn, 0, 4)       
 
         # Create togglable menu -> Nest layout in frame because you can control when to show and when to hide
         # frame = QFrame()
@@ -92,13 +95,14 @@ class Menu(QWidget):
 
         bruteForceGroup = QButtonGroup()
         # Option to apply rules
-        self.ruleMenu = QRadioButton("Rules")
-        self.ruleMenu.setProperty('Hide', True)
-        btn.setObjectName('BruteforceOption')
+        self.ruleMenu = QRadioButton("Add Rules")
+        # self.ruleMenu.setProperty('Hide', False)
+        # btn.setObjectName('ShowMe')
         self.ruleMenu.optionNum = Menu.USE_RULE
         bruteForceGroup.addButton(self.ruleMenu, 1)
         self.ruleMenu.toggled.connect(self.selectAttackMode)
-        bruteForceMenu.addWidget(self.ruleMenu, 0, 0)
+        self.ruleMenu.setVisible(False)
+        layout.addWidget(self.ruleMenu, 2, 0)
 
         #store hidden layout in frame
         # frame.setLayout(bruteForceMenu)
@@ -112,18 +116,25 @@ class Menu(QWidget):
     def selectAttackMode(self):
         radiobutton = self.sender()
         if radiobutton.isChecked():
-            print("Method is %d" % (radiobutton.methodNum ))
+            if(radiobutton.methodNum == Menu.BRUTE_FORCE):
+                self.optionBox.setVisible(True)
+            if(radiobutton.methodNum == Menu.MASK):
+                self.optionBox.setVisible(False)
+    
     
     def toggleMenu(self):
+        # for every box
         if(self.optionBox.isChecked()):
-            print("Show Menu")
+            # self.ruleMenu.setProperty('Hide', True)
+            self.ruleMenu.setVisible(True)
         else:
-            print("Hide Menu")
+             self.ruleMenu.setVisible(False)
+        #     self.ruleMenu.setProperty('Hide', False)
+        # self.ruleMenu.setStyle(self.ruleMenu.style())
         
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     screen = Menu()
-    screen->setStyleSheet(menuCSS)
     screen.show()
     sys.exit(app.exec_())
 

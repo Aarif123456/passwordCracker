@@ -57,14 +57,10 @@ Why python? easier to build so good for prototyping, lot of available resources,
 
 cons: slower, less efficient, doesn't have low level control that languages like c have, 
 
-Must have functionality
-1. Crack local password using the different password cracking methods
-2. Use rainbow table to crack hashes
 
 Future implementation
 1. Scan website for vulnerabilities -> For now can demonstrate by using software like burp suite
-2. Run attack on-line
-3. On WiFi
+2. Will allow custom character set for mask in future
 
 
 References 
@@ -84,7 +80,7 @@ On-line mode
 1. Attack Wi-Fi
 2. Connect to socket
 
-Program helper
+
 1. Graphic interface
 
 Hashes to include
