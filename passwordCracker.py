@@ -25,11 +25,9 @@ class passwordCracker:
         self.outputFile = makeOutputFile(oFile)
         self.hashNumber = 0 #default is to use plain-text
         self.verbose = False #default is singular attacks so we don't need to verbose the attempts
-        self.appendMask = False
-        self.prependMask = False
-        self.addedMask = ""
-        self.applyRule = False
-        self.ruleList = None
+        self.appendMask = []
+        self.prependMask = []
+        self.ruleList = []
         self.numCracked = 0
 
     # set the program to check for the given hashes
@@ -49,37 +47,25 @@ class passwordCracker:
             return hashlib.md5(bytes(guess, 'utf-8')).hexdigest()
         return word
     
-    def setAppendMask(self, am: bool):
+    def setAppendMask(self, am: str):
         self.appendMask = am
 
-    def setPrependMask(self, pm: bool):
+    def setPrependMask(self, pm: str):
         self.prependMask = pm
-
-    def setAddedMask(self, m: str):
-        self.addedMask = m
-
-    def setRuleApply(self, r: bool):
-        self.applyRule = r
 
     def setRuleList(self,rl: list):
         self.ruleList = rl 
 
     def checkMask(self,plainTextPassword) -> bool:
-        if(not self.appendMask and not self.prependMask):
+        if(len(self.appendMask) == 0 and len(self.prependMask) == 0):
             return False
-        if(self.addedMask == ""):
-            print("ERROR: no custom mask found")
-            return False
-        if(self.appendMask): # apply mask to end
-            self.maskAttack(self.addedMask, "", plainTextPassword)
-        if (self.prependMask):
-            self.maskAttack(self.addedMask, plainTextPassword) 
+        if(len(self.appendMask) != 0): # apply mask to end
+            self.maskAttack(self.appendMask, "", plainTextPassword)
+        if (len(self.prependMask) != 0 ):
+            self.maskAttack(self.prependMask, plainTextPassword) 
         return True
 
     def ruleAttack(self, keyspace,  min_length = 0, max_length = 1) -> bool:
-        if(self.ruleList == None):
-            print("No rule file is set")
-            return False
         for i in range( min_length ,max_length ):
             for ruleString in self.ruleList:
                 lengthAttempt = itertools.product(keyspace,repeat=i+1)
@@ -125,7 +111,7 @@ class passwordCracker:
     def bruteForce(self, keyspace,  min_length = 0, max_length = 1 ):        
         min_length = min(0,min_length) #min_length can't be less than 0
         print("running brute Force")
-        if(self.applyRule):
+        if(len(self.ruleList) != 0):
             self.ruleAttack(keyspace,min_length,max_length)
         else:
             self.normalBruteForce(keyspace,min_length,max_length)
@@ -172,27 +158,10 @@ class passwordCracker:
             if(i != len(maskList)-1):
                 s += " + "
         s += "\n"
-        # s += "\t"*(len(maskList))  
-        # s += "possiblePassword =  self.getWord(prefix + plainTextPassword + suffix) \n"
         s += "\t"*(len(maskList))  
         s += "if(self.passwordCheck(prefix + plainTextPassword + suffix)):\n\t"
         s += "\t"*len(maskList)
         s += "exit()\n\t"
-        # s += "for password in self.passwordList:\n\t"
-        # s += "\t"*len(maskList)
-        # s += "if possiblePassword == password:\n\t"
-        # s += "\t"*(len(maskList)+1)
-        # s +=  "self.numCracked += 1\n\t"
-        # s += "\t"*(len(maskList)+1)
-        # s +=  "self.outputFile.write(plainTextPassword+'\\n')\n\t"
-        # s += "\t"*(len(maskList)+1)
-        # s +=  "self.passwordList.remove(possiblePassword)\n\t"
-        # s += "\t"*len(maskList)
-        # s += "if 0 == len(self.passwordList):\n\t"
-        # s += "\t"*(len(maskList)+1)
-        # s += 'print("All passwords cracked!")\n\t'
-        # s += "\t"*(len(maskList)+1)
-        # s += "exit()\n\t"
         # print(s) # for testing print out python code to execute 
         return s
     def maskAttack(self, mask: str, prefix = "", suffix = "",*customFileName ):     
@@ -213,14 +182,14 @@ class passwordCracker:
             nextWordList=[]
             for word in wordList:
                 # what if someone's password is "invalid rule "and it gets cracked by an error O.O
-                func = ruleList.get(rule, lambda: print('Invalid'))                
+                func = ruleList.get(rule, lambda: print('Invalid rule'))                
                 s = "func(''.join(word)"
                 for i in range (ruleCounter - ruleCountList.get(rule, 1) + 1, ruleCounter):
                     s += ",'" + str(ruleString[i]) + "'"
                 s += ")"
                 # print(s)
                 plainTextPassword = eval(s)
-                if not self.checkMask(possiblePassword):
+                if not self.checkMask(plainTextPassword):
                     if(ruleCounter<len(ruleString)): # if we need to know password to chain 
                     # ** for large rules it might be better to write to file and read back from it  
                         nextWordList.append(plainTextPassword)

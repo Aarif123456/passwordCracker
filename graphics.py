@@ -1,3 +1,8 @@
+# Abdullah Arif 
+# COMP-4670 password cracking final project
+# main menu for password cracker
+
+from passwordCracker import *
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
