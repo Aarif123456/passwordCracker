@@ -131,7 +131,7 @@ class Menu(QWidget):
              self.ruleMenu.setVisible(False)
         #     self.ruleMenu.setProperty('Hide', False)
         # self.ruleMenu.setStyle(self.ruleMenu.style())
-    def selectBruteforceOption(self);
+    def selectBruteforceOption(self):
         # use dictionary attack with proper option applied
         pass
 if __name__ == '__main__':
