@@ -9,21 +9,18 @@ def getFileInfo(filePath : str):
     file = open(filePath,"r+", encoding="utf-8")
     return file.read().splitlines()
 
-def makeOutputFile(filePath : str):
-    file = open(filePath,"w+", encoding="utf-8")
-    return file
 
 class passwordCracker:
     #static variable for the different types of hashes
-    NOHASH = 0
+    NO_HASH = 0
     SHA1 = 1
     MD5 = 2
     BCRYPT = 3
     def __init__(self, inputPasswordFile : str, oFile : str):
         # I would try and catch error here but I want the program to crash if the input, output file are not set incorrectly
         self.passwordList = getFileInfo(inputPasswordFile)
-        self.outputFile = makeOutputFile(oFile)
-        self.hashNumber = 0 #default is to use plain-text
+        self.outputFile = open(oFile,"w+", encoding="utf-8")
+        self.hashNumber = passwordCracker.NO_HASH #default is to use plain-text
         self.verbose = False #default is singular attacks so we don't need to verbose the attempts
         self.appendMask = []
         self.prependMask = []
@@ -94,9 +91,9 @@ class passwordCracker:
                 return  bcrypt.checkpw(possiblePassword.encode('utf-8'), password.encode('utf-8'))
             except ValueError as e:
                 print("Not in BCRYPT form")
-                return False
-            
+                return False     
         return possiblePassword == password 
+    
     # straight brute force with no rules
     def normalBruteForce(self, keyspace,  min_length = 0, max_length = 1) -> bool: #return if finished
         for i in range( min_length ,max_length ):
@@ -197,8 +194,4 @@ class passwordCracker:
                     if(self.passwordCheck(plainTextPassword)):
                         return True
                         
-                    wordList = nextWordList 
-
-
-
-            
+                    wordList = nextWordList             
