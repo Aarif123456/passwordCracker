@@ -69,7 +69,7 @@ class Menu(QWidget):
     def openMenu(self):
         # self.setStyleSheet(menuCSS)
         # set up window
-        self.setGeometry(300, 200, 300, 600)
+        self.setGeometry(200, 20, 200, 500)
         self.setWindowTitle('Password Cracker')    
 
         # set up the main window in grid form
@@ -97,12 +97,13 @@ class Menu(QWidget):
         
         # button to open input file
         btn = QPushButton('', self)
-        btn.setIcon(QIcon('Resources/Images/open.png'))
-        btn.setIconSize(QSize(24,24))
+        btn.setIcon(QIcon('Resources/Images/fileuse.png'))
+        btn.setIconSize(QSize(240,35))
+        btn.setStyleSheet('QPushButton{border: 0px solid;}')
         btn.setToolTip('Open up the input file that the program will use to crack the passwords')
         btn.clicked.connect(lambda:self.file_open("Input"))
         btn.resize(btn.sizeHint())
-        layout.addWidget(btn, 0, 4)       
+        layout.addWidget(btn, 0, 2)       
 
         # Togglable options for dictionary attack
         # Check-box to add rules to add to dictionary attack
@@ -113,12 +114,12 @@ class Menu(QWidget):
         # Check-box to append a mask to add to dictionary attack
         self.maskAppendBox = QCheckBox("Append Mask")
         self.maskAppendBox.toggled.connect(self.toggleAppendMask)
-        layout.addWidget(self.maskAppendBox , 1, 2)
+        layout.addWidget(self.maskAppendBox , 1, 1)
 
         # Check-box to append a mask to add to dictionary attack
         self.maskPrependBox = QCheckBox("Prepend Mask")
         self.maskPrependBox.toggled.connect(self.togglePrependMask)
-        layout.addWidget(self.maskPrependBox , 1, 3)
+        layout.addWidget(self.maskPrependBox , 1, 2)
 
         self.hashBox = QCheckBox("Hash mode")
         self.hashBox.toggled.connect(self.toggleHashMode)
@@ -137,22 +138,27 @@ class Menu(QWidget):
         
         # ** USE save file mode instead of open
         self.inputBtn = QPushButton('', self)
-        self.inputBtn.setIcon(QIcon('Resources/Images/open.png'))
-        self.inputBtn.setIconSize(QSize(24,24))
+        self.inputBtn.setIcon(QIcon('Resources/Images/filepw.png'))
+        self.inputBtn.setIconSize(QSize(240,35))
+        self.inputBtn.setStyleSheet('QPushButton{border: 0px solid;}')
         self.inputBtn.setToolTip('Select file with all the passwords or hashes that you want to crack ')
         self.inputBtn.toggled.connect(self.getInputFile)
         layout.addWidget(self.inputBtn , 3, 1)
 
         self.outputBtn = QPushButton('', self)
-        self.outputBtn.setIcon(QIcon('Resources/Images/open.png'))
-        self.outputBtn.setIconSize(QSize(24,24))
+        self.outputBtn.setIcon(QIcon('Resources/Images/savepw.png'))
+        self.outputBtn.setIconSize(QSize(240,35))
+        self.outputBtn.setStyleSheet('QPushButton{border: 0px solid;}')
         self.outputBtn.setToolTip('Select file that will store the cracked passwords ')
         self.outputBtn.toggled.connect(self.getOutputFile)
         layout.addWidget(self.outputBtn , 3, 2)
 
-        self.startBtn = QPushButton('Crack passwords!', self)
+        self.startBtn = QPushButton('', self)
+        self.startBtn.setIcon(QIcon('Resources/Images/crackpw.png'))
+        self.startBtn.setIconSize(QSize(240,35))
+        self.startBtn.setStyleSheet('QPushButton{border: 0px solid;}')
         self.startBtn.toggled.connect(self.startCrack)
-        self.outputBtn.setToolTip('Press to start cracking passwords!')
+        self.outputBtn.setToolTip('Select folder to save password to')
         layout.addWidget(self.startBtn , 4, 1, 1, 2)
 
         
