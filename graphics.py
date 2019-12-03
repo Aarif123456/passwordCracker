@@ -43,6 +43,7 @@ class Menu(QWidget):
         # by default we assume we are dealing with plain passwords
         self.hashMode = passwordCracker.NO_HASH  
         self.onlineHashCheck = False
+        # make window stay the same size
         # testing
         self.setUpShortcuts()
         self.openMenu()
@@ -155,6 +156,7 @@ class Menu(QWidget):
         self.outputBtn.setToolTip('Press to start cracking passwords!')
         layout.addWidget(self.startBtn , 4, 1, 1, 2)
 
+        # self.setFixedSize(self.size())
         
     def selectAttackMode(self):
         radiobutton = self.sender()
