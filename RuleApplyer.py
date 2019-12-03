@@ -2,6 +2,7 @@
 # Hold all the function used for rule attacks 
 
 # invert capitalizer makes the first character in a string  a lower case and makes the rest of the string upper-case
+
 def invertCapitalize( curString :str) -> str:
 	if len(curString) <2:
 		return curString.lower()
@@ -250,3 +251,57 @@ class MemoryRules:
 		else:
 			curString = MemoryRules.memoryList.pop(0) +curString
 		return curString
+
+# rule list kind of work like a quick filter
+ruleList = {
+    ":": nothingString, # do nothing
+    "l": lowerString, # lowercase   
+    "u": upperString, # upper case
+    "c": capitalizeString,
+    "C": invertCapitalize,
+    "t": toggleString,
+    "T": toggleStringAtPos,
+    "r": reverseString,
+    "d": duplicateString,
+    "p": duplicateStringNtimes,
+    "f": reflectString,
+    "{": rotateLeftString,
+    "}": rotateRightString,
+    "$": appendCharacter,
+    "^": prependCharacter,
+    "[": truncateLeft,
+    "]": truncateRight,
+    "D": deleteAtPos, 
+    "x": extractSubstring, #extract substring from main string
+    "O": omitSubstring,
+    "i": insertCharacterAtPos, 
+    "o": overwriteCharacterAtPos, 
+    "'": truncateFromPos,  
+    "s": replaceCharacter, 
+    "@": purgeString,
+    "z": duplicateFirst,
+    "Z": duplicateLast,
+    "q": duplicateAll,
+    "M": MemoryRules.setMemory,
+    "X": MemoryRules.extractMemory,
+    "4": MemoryRules.appendMemory,
+    "6": MemoryRules.prependMemory
+}
+# handle rules that have arguments
+ruleCountList = {
+    "T": 2, # toggle at given position
+    "p": 2, # duplicate n number of time
+    "$": 2, # append the given character
+    "^": 2, # prepend the given character
+    "D": 2, # Delete at given position
+    "x": 3, # get character in the given range if out of range get whole word
+    "O": 3, # get rid of character is given range
+    "i": 3, # iNX insert char X at position n
+    "o": 3, # oNX overwrite character at position i with char X
+    "'": 2, # truncate word after given index 
+    "s": 3, # sXY - replace all instances of X with Y
+    "@": 2, # second argument is character to purge
+    "z": 2, # second argument is how many times first character will be duplicated
+    "Z": 2, # second argument is how many times last character will be duplicated
+    "X": 4,  # Insert substring of length M starting from position N of word saved to memory at position I
+}

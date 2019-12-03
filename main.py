@@ -43,19 +43,26 @@ def passwordCrackingMenu():
 # 3. Mask attack
 # 4. Rule-based with dictionary
 # 5. Combination'''))
-	mode = 1
+	mode = 4
+	cracker.setVerboseMode(True)
 	if(mode == 1):
 		#  get key space from file or one of the pre selected
-		cracker.bruteForce("456789", 0,12)
+		cracker.bruteForce("456789", 0,4)
 	if(mode == 2):
 		cracker.maskAttack("?l?l?u?a","","cat")
 	if(mode == 3):
+		cracker.setRuleApply(True)
 		# get rule File using Tkinter
 		with open("Input/rule.txt","r+", encoding="utf-8") as ruleFile:
-			cracker.bruteForce(['p','prat', 'p@ssW0rd'], 0,3, True,ruleFile.read().splitlines())
+			cracker.setRuleList(ruleFile.read().splitlines())
+		cracker.bruteForce(['p','prat', 'p@ssW0rd'], 0,3)
 	if(mode == 4 ):
-		# hybrid attack
-		pass
+		cracker.setAppendMask(True)
+		cracker.setAddedMask("?l?l?u?a")
+		# get rule File using Tkinter
+		with open("Input/rule.txt","r+", encoding="utf-8") as ruleFile:
+			cracker.setRuleList(ruleFile.read().splitlines())
+		cracker.bruteForce(['p','prat', 'p@ssW0rd'], 0,3)
 
 	print("check output file for list of cracked password")
 	# filename = filedialog.askopenfile(mode="r",title="Load",filetypes = fileFormats)

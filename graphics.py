@@ -100,7 +100,7 @@ class Menu(QWidget):
         # btn.setObjectName('ShowMe')
         self.ruleMenu.optionNum = Menu.USE_RULE
         bruteForceGroup.addButton(self.ruleMenu, 1)
-        self.ruleMenu.toggled.connect(self.selectAttackMode)
+        self.ruleMenu.toggled.connect(self.selectBruteforceOption)
         self.ruleMenu.setVisible(False)
         layout.addWidget(self.ruleMenu, 2, 0)
 
@@ -131,7 +131,9 @@ class Menu(QWidget):
              self.ruleMenu.setVisible(False)
         #     self.ruleMenu.setProperty('Hide', False)
         # self.ruleMenu.setStyle(self.ruleMenu.style())
-        
+    def selectBruteforceOption(self);
+        # use dictionary attack with proper option applied
+        pass
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     screen = Menu()
