@@ -67,9 +67,6 @@ References
 
 To do list 
 
-Password
-1. If in hold mode also write to attempt.md file and use that file to modify
-2. Combine so mask atack can be appended to dictionary or bruteforce
 
 Hash mode
 1. Enter hash and search for it
@@ -81,16 +78,8 @@ On-line mode
 2. Connect to socket
 
 
-1. Graphic interface
-
 Hashes to include
 SHA-1
 SHA-2
 NIST
 MD-5
-
-
-ClERAYa4
-
-
-
