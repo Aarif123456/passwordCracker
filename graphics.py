@@ -40,8 +40,6 @@ class Menu(QWidget):
         self.rules = "" #holds path to the file with rules
         self.appendMask = "" #hold the mask that will be applied to end of brute force
         self.prependMask = "" #hold the mask that will be applied to start of brute force
-        # by default we assume we are dealing with plain passwords
-        # make window stay the same size
         self.openMenu()
 
     
@@ -145,7 +143,7 @@ class Menu(QWidget):
         self.hashBox = QCheckBox("Hash mode")
         layout.addWidget(self.hashBox , 3, 0)
 
-        self.rainbowBox = QCheckBox("Rainbow check")
+        self.rainbowBox = QCheckBox("Verbose mode")
         layout.addWidget(self.rainbowBox , 3, 1)
 
         self.hashDropdown = QComboBox(self)
@@ -252,14 +250,14 @@ class Menu(QWidget):
             print("You must have an input file for the method")
             return
         cracker = passwordCracker(self.inputFile, self.outputFile)
-        cracker.setVerboseMode(True)
+        cracker.setVerboseMode(self.rainbowBox.isChecked())
         if(self.mode == Menu.BRUTE_FORCE):
             cracker.setRuleList(self.rules)
             cracker.setPrependMask(self.prependMask)
             cracker.setAppendMask(self.appendMask)
             cracker.setHashNum(self.getHashMode())
-            if(self.hashBox.isChecked()  and self.rainbowBox.isChecked()):
-                pass # use this to run on-line hash check ***
+            # if(self.hashBox.isChecked()  and self.rainbowBox.isChecked()):
+            #     pass # use this to run on-line hash check ***
             # Brute force stuff
             cracker.bruteForce(self.methodInput , int(self.minBox.value()), int(self.maxBox.value()))
         else:
