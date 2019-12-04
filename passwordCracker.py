@@ -16,6 +16,7 @@ class passwordCracker:
     SHA1 = 1
     MD5 = 2
     BCRYPT = 3
+
     def __init__(self, inputPasswordFile : str, oFile : str):
         # I would try and catch error here but I want the program to crash if the input, output file are not set incorrectly
         self.passwordList = getFileInfo(inputPasswordFile)
@@ -57,9 +58,9 @@ class passwordCracker:
         if(len(self.appendMask) == 0 and len(self.prependMask) == 0):
             return False
         if(len(self.appendMask) != 0): # apply mask to end
-            self.maskAttack(self.appendMask, "", plainTextPassword)
+            self.maskAttack(self.appendMask, plainTextPassword)             
         if (len(self.prependMask) != 0 ):
-            self.maskAttack(self.prependMask, plainTextPassword) 
+            self.maskAttack(self.prependMask, "", plainTextPassword)
         return True
 
     def ruleAttack(self, keyspace,  min_length = 0, max_length = 1) -> bool:
@@ -70,7 +71,10 @@ class passwordCracker:
             if 0 == len(self.passwordList):
                 return True
         return False
-    
+    def endingPrompt(self) -> str:
+        if 0 == len(self.passwordList):
+            return "All passwords cracked!"
+        return "Finished cracker. Could not find all passwords:("
     def passwordCheck(self, plainTextPassword):   
         possiblePassword = self.getWord(plainTextPassword)     
         for password in self.passwordList:
@@ -81,7 +85,6 @@ class passwordCracker:
                 self.outputFile.write(plainTextPassword+"\n")
                 self.passwordList.remove(password)
             if 0 == len(self.passwordList):
-                print("All passwords cracked!")
                 return True
         return False
     # for some hashes we can't just straight compare passwords

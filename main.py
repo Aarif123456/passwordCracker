@@ -43,13 +43,13 @@ def passwordCrackingMenu():
 # 3. Mask attack
 # 4. Rule-based with dictionary
 # 5. Combination'''))
-	mode = 2
+	mode = 5
 	cracker.setVerboseMode(True)
 	if(mode == 1):
 		#  get key space from file or one of the pre selected
 		cracker.bruteForce("456789", 0,4)
 	if(mode == 2):
-		cracker.setHashNum(passwordCracker.BCRYPT)
+		# cracker.setHashNum(passwordCracker.BCRYPT)
 		cracker.bruteForce(['password','crack'], 0,2)
 	if(mode == 3):
 		cracker.maskAttack("?d?d?d?d")
@@ -57,7 +57,7 @@ def passwordCrackingMenu():
 		# get rule File using Tkinter
 		with open("Input/rule.txt","r+", encoding="utf-8") as ruleFile:
 			cracker.setRuleList(ruleFile.read().splitlines())
-		cracker.bruteForce(['p','prat', 'p@ssW0rd'], 0,3)
+		cracker.bruteForce([ 'p@ssW0rd'], 0,1)
 	if(mode == 5 ):
 		cracker.setPrependMask("?d?d?d?d")
 		# get rule File using Tkinter

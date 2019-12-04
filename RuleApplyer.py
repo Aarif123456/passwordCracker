@@ -305,3 +305,4 @@ ruleCountList = {
     "Z": 2, # second argument is how many times last character will be duplicated
     "X": 4,  # Insert substring of length M starting from position N of word saved to memory at position I
 }
+

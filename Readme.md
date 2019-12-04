@@ -89,9 +89,8 @@ SHA-2
 NIST
 MD-5
 
-BCrypt must use Tara's method and talk about challenger protocol --> use custom challenge to create custom rainbowList 
 
-
+ClERAYa4
 
 
 
