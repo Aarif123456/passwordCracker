@@ -40,9 +40,9 @@ class passwordCracker:
         if(self.verbose):
             print(word+"\n")
         if(self.hashNumber == passwordCracker.SHA1):
-            return hashlib.sha1(bytes(guess, 'utf-8')).hexdigest()
+            return hashlib.sha1(bytes(word, 'utf-8')).hexdigest()
         if(self.hashNumber == passwordCracker.MD5):
-            return hashlib.md5(bytes(guess, 'utf-8')).hexdigest()
+            return hashlib.md5(bytes(word, 'utf-8')).hexdigest()
         return word
     
     def setAppendMask(self, am: str):
