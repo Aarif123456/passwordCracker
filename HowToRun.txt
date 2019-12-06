@@ -1,0 +1,6 @@
+The program is run through main.py, which is executed in Python.
+
+Since we used the bcrypt and PyQt5 modules, they are installed through command line after downloading Python by using:
+
+pip install bcrypt
+pip install PyQt5
