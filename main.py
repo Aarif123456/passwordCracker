@@ -7,23 +7,12 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
-# app = QApplication(sys.argv)
-# # window = QMainWindow()
-# window = QWidget()
-# layout = QVBoxLayout()
-# layout.addWidget(QPushButton('Top'))
-# layout.addWidget(QPushButton('Bottom'))
-# window.setLayout(layout)
-# window.resize(500, 400)
-# # window.setCentralWidget(button)
-# window.show()
-# sys.exit(app.exec_())
+
 menuCSS = """"
 
 """
 
-
-# # open up and 
+# Open Menu window
 class Menu(QWidget):
     BRUTE_FORCE = 0
     MASK    = 1
@@ -137,7 +126,7 @@ class Menu(QWidget):
         self.maxBox = QSpinBox(self)
         self.maxBox.setValue(1)
         self.maxBox.setRange(0,10)
-        # self.maxBox.setValidator(self.onlyInt)
+        
         layout.addWidget(self.maxBox , 2, 3)        
 
         self.hashBox = QCheckBox("Hash mode")
@@ -176,8 +165,6 @@ class Menu(QWidget):
         self.startBtn.clicked.connect(self.startCrack)
         self.outputBtn.setToolTip('Select folder to save password to')
         layout.addWidget(self.startBtn , 5, 0, 1, 4)
-
-        # self.setFixedSize(self.size())
         
     def selectAttackMode(self):
         radiobutton = self.sender()
