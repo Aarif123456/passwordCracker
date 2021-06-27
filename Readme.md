@@ -1,4 +1,4 @@
-Password cracker tool
+# Password cracker tool
 
 Passwords are the most common method of security. So, this project will be a tool created to try and break passwords so we can understand common pitfalls when it comes to creating passwords. You might wonder isn't it dangerous to put a password cracking toolkit on-line? Well, modern day security is based on the methods that methods are exposed we don't rely on ignorance for protection. Furthermore, anything this project will be able to do is done more efficiently by other on-line tools available for free. So, the point of this project isn't to create a revolutionary password cracker tool. But, instead to compile variety of techniques to show how passwords are cracked so that we can build tools to be better prepared. 
 
@@ -7,7 +7,8 @@ It is easier to think about breaking than defending because when you try to crea
 This project has 3 parts that are implemented: password cracking, extracting and using hashes, and running on-line attacks
 
 
-Part 1: Password cracking
+## Part 1: Password cracking
+
 This part of the project will be used to locally crack passwords using different types of attacks hacker common utilize: brute-force, dictionary, rules and hybrid. 
 
 brute-force-> simple as it sounds just try everything. We can make faster by limiting the the character space to commonly used characters.
@@ -25,7 +26,8 @@ Hybrid we combine technique through careful analysis. We know most numbers come 
 
 Professional grade tools that do the same thing better: hashCat, john the ripper
 
-Part 2: Cracking hashes.
+## Part 2: Cracking hashes.
+
 The second part of the project is to use different techniques to get and utilize hashed passwords
 
 The first part of this getting the tables. So, we will go over common pawning techniques like cross-site -scripting , SQL injection, man-in-the browser, sniffing packets attack and so on
@@ -35,7 +37,8 @@ A super simple way of doing this is using rainbow table to crack hashes. However
 
 professional grade version tools: burp suite, wireShark, openVas, SQlMap
 
-Part 3: Running attacks on-line
+## Part 3: Running attacks on-line
+
 This part of the project will try to utilize the password cracking capabilities to run attacks on-line. We will go over common barriers such as being locked out for trying to many passwords, overwhelming server with request and try to use some common techniques to overcome.
 We will try to run this attack on a dummy website and try to break it.
 
@@ -43,7 +46,8 @@ We will also try to see if we can run attack on Wi-Fi connections
 
 professional grade tools: hydra, 
 
-Part 4: Unimplemented aspects
+## Part 4: Unimplemented aspects
+
 Things not implemented by should be kept in mind when discussing password cracking.
 Most passwords aren't cracked with tools but by tricking people into giving their passwords or by using simpler recovery methods.
 Social engineering
@@ -63,10 +67,9 @@ Future implementation
 2. Will allow custom character set for mask in future
 
 
-References 
+## Paper
 
-To do list 
-
+[docs](https://docs.google.com/document/d/1fB2ADr3TwQNj8fiEOXG_1yNYN64iaTsZSpFvfI_nk6Q)
 
 Hash mode
 1. Enter hash and search for it
