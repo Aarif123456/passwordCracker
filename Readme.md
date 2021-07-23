@@ -56,27 +56,26 @@ Shoulder surfing
 
 Defense idea - multi-factor authentication
 
-part 5: language choice python
+## Part 5: language choice: Python
 Why python? easier to build so good for prototyping, lot of available resources, good to demonstrate idea
 
 cons: slower, less efficient, doesn't have low level control that languages like c have, 
-
-
-Future implementation
-1. Scan website for vulnerabilities -> For now can demonstrate by using software like burp suite
-2. Will allow custom character set for mask in future
-
 
 ## Paper
 
 [docs](https://docs.google.com/document/d/1fB2ADr3TwQNj8fiEOXG_1yNYN64iaTsZSpFvfI_nk6Q)
 
-Hash mode
+## Future implementation
+1. Scan website for vulnerabilities -> For now can demonstrate by using software like burp suite
+2. Will allow custom character set for mask in future
+
+
+### Hash mode
 1. Enter hash and search for it
 3. *Sniff packets for hashes*
 4. *Potentially identify hashes*
 
-On-line mode
+### On-line mode
 1. Attack Wi-Fi
 2. Connect to socket
 
